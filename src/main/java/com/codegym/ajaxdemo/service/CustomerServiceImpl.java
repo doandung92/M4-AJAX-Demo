@@ -16,8 +16,8 @@ public class CustomerServiceImpl implements ICustomerService{
     }
 
     @Override
-    public Customer findById(Integer id) {
-        return null;
+    public Customer findById(Long id) {
+        return customerRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements ICustomerService{
     }
 
     @Override
-    public Customer remove(Integer id) {
-        return null;
+    public void remove(Customer customer) {
+        customerRepository.delete(customer);
     }
 }

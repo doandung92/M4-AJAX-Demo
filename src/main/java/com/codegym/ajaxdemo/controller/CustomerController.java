@@ -3,11 +3,11 @@ package com.codegym.ajaxdemo.controller;
 import com.codegym.ajaxdemo.model.Customer;
 import com.codegym.ajaxdemo.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/customers")
@@ -26,5 +26,15 @@ public class CustomerController {
     @ResponseBody
     public Iterable<Customer> getAll(){
         return customerService.findAll();
+    }
+    @DeleteMapping("/delete/{id}")
+    @ResponseBody
+    public Customer deleteCustomer(@PathVariable("id") Long id){
+        Customer customer = customerService.findById(id);
+        if (customer != null){
+            customerService.remove(customer);
+            return customer;
+        } else
+            return null;
     }
 }
