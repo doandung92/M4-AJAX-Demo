@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript"></script>
+        $(document).ready(function () {
+            var deleteLink = $("a:contains('Delete')");
+            $(deleteLink).click(function (event) {
+                $.ajax({
+                    url: $(event.target).attr("href"),
+                    type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Accept", "application/json");
+                        xhr.setRequestHeader("Content-Type", "application/json");
+
+                    },
+                    success: function (smartphone) {
+                        var respContent = "";
+                        var rowToDelete = $(event.target).closest("tr");
+                        rowToDelete.remove();
+                        respContent += "<span class='success'>Smartphone was deleted: [";
+                        respContent += smartphone.producer + " : ";
+                        respContent += smartphone.model + " : ";
+                        respContent += smartphone.price + "]</span>";
+                        $("#sPhoneFromResponse").html(respContent);
+                    }
+                });
+                event.preventDefault();
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Customers List</h1>
+<a href="/customers/create">Create new customer</a>
+    <table border="1px solid black">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Action</td>
+            </tr>
+        </thead>
+        <tr th:each="customer : ${customers}">
+            <td th:text="${customer.id}"></td>
+            <td th:text="${customer.name}"></td>
+            <td>
+                <a href="#">Edit</a>
+                <a th:href="@{'customer/delete/'+${customer.id}}">Delete</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
