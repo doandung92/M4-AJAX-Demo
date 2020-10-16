@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/customers")
 public class CustomerController {
@@ -25,6 +27,19 @@ public class CustomerController {
     public Iterable<Customer> getAll(){
         return customerService.findAll();
     }
+
+    @GetMapping("/api/search/{search}")
+    @ResponseBody
+    public Iterable<Customer> getAllByName(@PathVariable("search") Optional<String> search){
+        String searchStr = search.orElse("");
+        return customerService.findAllByNameContaining(searchStr);
+    }
+    @GetMapping("/api/search/")
+    @ResponseBody
+    public Iterable<Customer> getAllByName(){
+        return customerService.findAll();
+    }
+
     @DeleteMapping("/delete/{id}")
     @ResponseBody
     public Customer deleteCustomer(@PathVariable("id") Long id){

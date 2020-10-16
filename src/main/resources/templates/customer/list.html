@@ -6,15 +6,41 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            let deleteLink = $("a:contains('Delete')");
+            $("#search").keyup(function (event) {
+                let searchValue = $(event.target).val();
+                console.log(searchValue)
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    url: "/customers/api/search/" + searchValue,
+                    type: "GET",
+                    success: function (customers) {
+                        let respContent = "";
+                        respContent += "<table border='1px solid black'>";
+                        for (let i = 0; i < customers.length; i++) {
+                            respContent +=
+                            `<tr>
+                                <td>${customers[i].id}</td>
+                                <td>${customers[i].name}</td>
+                                <td>
+                                    <a href="#">Edit</a>
+                                    <a href='customers/delete/${customers[i].id}' class="deleteButton">Delete</a>
+                                </td>
+                            </tr>`
+                        }
+                        respContent += "</table>";
+                        $("#tableContent").html(respContent);
+                    }
+                });
+                event.preventDefault();
+            });
+            let deleteLink = $(".deleteButton");
             $(deleteLink).click(function (event) {
                 $.ajax({
                     url: $(event.target).attr("href"),
                     type: "DELETE",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Accept", "application/json");
-                        xhr.setRequestHeader("Content-Type", "application/json");
-                    },
                     success: function (customer) {
                         let respContent = "";
                         let rowToDelete = $(event.target).closest("tr");
@@ -32,24 +58,24 @@
 </head>
 <body>
 <h1>Customers List</h1>
+<label>
+    Search
+    <input type="text" placeholder="Search" id="search">
+</label>
+<hr>
 <div id="sPhoneFromResponse"></div>
 <a href="/customers/create">Create new customer</a>
-    <table border="1px solid black">
-        <thead>
-            <tr>
-                <td>ID</td>
-                <td>Name</td>
-                <td>Action</td>
-            </tr>
-        </thead>
-        <tr th:each="customer : ${customers}">
-            <td th:text="${customer.id}"></td>
-            <td th:text="${customer.name}"></td>
-            <td>
-                <a href="#">Edit</a>
-                <a th:href="@{customers/delete/__${customer.id}__}">Delete</a>
-            </td>
-        </tr>
-    </table>
+<div id="tableContent">
+<table border="1px solid black">
+    <tr th:each="customer : ${customers}">
+        <td th:text="${customer.id}"></td>
+        <td th:text="${customer.name}"></td>
+        <td>
+            <a href="#">Edit</a>
+            <a th:href="@{customers/delete/__${customer.id}__}" class="deleteButton">Delete</a>
+        </td>
+    </tr>
+</table>
+</div>
 </body>
 </html>

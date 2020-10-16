@@ -19,6 +19,11 @@ public class CustomerServiceImpl implements ICustomerService{
     }
 
     @Override
+    public Iterable<Customer> findAllByNameContaining(String name) {
+        return customerRepository.findAllByNameContaining(name);
+    }
+
+    @Override
     public Customer findById(Long id) {
         return customerRepository.findById(id).orElse(null);
     }
