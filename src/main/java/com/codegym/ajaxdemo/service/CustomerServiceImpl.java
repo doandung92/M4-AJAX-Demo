@@ -5,7 +5,10 @@ import com.codegym.ajaxdemo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class CustomerServiceImpl implements ICustomerService{
     @Autowired
     CustomerRepository customerRepository;
@@ -22,7 +25,7 @@ public class CustomerServiceImpl implements ICustomerService{
 
     @Override
     public Customer save(Customer customer) {
-        return null;
+        return customerRepository.save(customer);
     }
 
     @Override

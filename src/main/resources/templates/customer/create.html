@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let updateLink = $("#formCreate");
+            $(updateLink).submit(function (event) {
+                let customerName = $("#name").val();
+                let json = { "name" : customerName};
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    url: "/customers/create",
+                    type: "POST",
+                    data: JSON.stringify(json),
+                    success: function (customer) {
+                        let respContent = "";
+                        respContent += "<span class='success'>Smartphone was created: [";
+                        respContent += customer.id + " : ";
+                        respContent += customer.name + "]</span>";
+                        $("#sPhoneFromResponse").html(respContent);
+                    }
+                });
+                event.preventDefault();
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Create New Customer</h1>
+<div id="sPhoneFromResponse"></div>
+<form th:action="@{/customers/create}" th:object="${customer}" method="post" id="formCreate">
+    <label>
+        Name
+        <input type="text" id="name" name="name">
+    </label>
+    <input type="submit" th:value="Save">
+</form>
+</body>
+</html>
