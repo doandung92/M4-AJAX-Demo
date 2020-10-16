@@ -33,6 +33,7 @@
 </head>
 <body>
 <h1>Create New Customer</h1>
+<a th:href="@{/customers}">Back to List</a>
 <div id="sPhoneFromResponse"></div>
 <form th:action="@{/customers/create}" th:object="${customer}" method="post" id="formCreate">
     <label>
